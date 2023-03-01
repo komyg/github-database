@@ -1,6 +1,6 @@
 import { Octokit } from 'octokit';
 
-export async function authenticate() {
+async function authenticate() {
   const octokit = new Octokit({
     auth: process.env.GITHUB_TOKEN,
   });
@@ -8,11 +8,36 @@ export async function authenticate() {
   return octokit;
 }
 
+// Search for public repositories on Github
+async function getGithubRepositories(octokit: Octokit) {
+  const gql = octokit.graphql;
+  const repositories = await gql(`
+    query {
+      search(query: "stars:>0", type: REPOSITORY, first: 100) {
+        repositoryCount
+        edges {
+          node {
+            ... on Repository {
+              name
+              url
+              description
+              stargazers {
+                totalCount
+              }
+            }
+          }
+        }
+      }
+    }
+  `);
+
+  return repositories;
+}
+
 export async function getGithubData() {
   const octokit = await authenticate();
 
-  const {
-    data: { login },
-  } = await octokit.rest.users.getAuthenticated();
-  console.log('Hello, %s', login);
+  const repositories = await getGithubRepositories(octokit);
+  // pretty print json result on console
+  console.log(JSON.stringify(repositories, null, 2));
 }
