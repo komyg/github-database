@@ -1,0 +1,21 @@
+node_modules/
+.vscode
+dist/
+
+.eslintcache
+.nvmrc
+.env
+enc-prod.key
+.psql_history
+
+# firebase service account
+firebase-sa.json
+
+# macOS specific files
+.DS_Store
+
+# Playwright
+/test-results/
+/playwright-report/
+/playwright/.cache/
+artifacts/
