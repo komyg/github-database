@@ -1,4 +1,5 @@
 import { Octokit } from 'octokit';
+import { Repositories, UsersPerRepository } from './types';
 
 async function authenticate() {
   const octokit = new Octokit({
@@ -12,10 +13,9 @@ function getPublicGithubRepositories(octokit: Octokit) {
   const gql = octokit.graphql; // Must do this to preserve syntax highlighting for some reason.
 
   return () =>
-    gql(`
+    gql<Repositories>(`
     query Repositories {
       search(query: "stars:>0", type: REPOSITORY, first: 10) {
-        repositoryCount
         edges {
           cursor
           node {
@@ -45,7 +45,7 @@ function getUsersPerRepository(octokit: Octokit) {
   const gql = octokit.graphql; // Must do this to preserve syntax highlighting for some reason.
 
   return (name: string, owner: string) =>
-    gql(
+    gql<UsersPerRepository>(
       `
     query UsersPerRepository($name: String!, $owner: String!) {
     repository(name: $name, owner: $owner) {
