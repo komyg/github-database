@@ -1,4 +1,9 @@
-let str: string;
-str = 'Hello World';
+import * as dotenv from 'dotenv';
+import { getGithubData } from './github/github';
+dotenv.config();
 
-console.log(str);
+async function main() {
+  await getGithubData();
+}
+
+main();
