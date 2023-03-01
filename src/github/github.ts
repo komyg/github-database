@@ -8,22 +8,24 @@ async function authenticate() {
   return octokit;
 }
 
-// Search for public repositories on Github
-async function getGithubRepositories(octokit: Octokit) {
-  const gql = octokit.graphql;
+async function getPublicGithubRepositories(octokit: Octokit) {
+  const gql = octokit.graphql; // Must do this to preserve syntax highlighting for some reason.
+
   const repositories = await gql(`
-    query {
-      search(query: "stars:>0", type: REPOSITORY, first: 100) {
+    {
+      search(query: "stars:>0", type: REPOSITORY, first: 10) {
         repositoryCount
         edges {
+          cursor
           node {
             ... on Repository {
               name
               url
               description
-              stargazers {
-                totalCount
-              }
+              createdAt
+              updatedAt
+              forkCount
+              stargazerCount
             }
           }
         }
@@ -37,7 +39,7 @@ async function getGithubRepositories(octokit: Octokit) {
 export async function getGithubData() {
   const octokit = await authenticate();
 
-  const repositories = await getGithubRepositories(octokit);
+  const repositories = await getPublicGithubRepositories(octokit);
   // pretty print json result on console
   console.log(JSON.stringify(repositories, null, 2));
 }
