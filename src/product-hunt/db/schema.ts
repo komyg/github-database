@@ -1,5 +1,5 @@
 import { Knex } from 'knex';
-import { getKnex } from './knex';
+import { getKnex } from '../../common/knex';
 
 export async function createProductHuntSchema() {
   const knex = getKnex();

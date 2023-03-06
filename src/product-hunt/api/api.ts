@@ -1,4 +1,4 @@
-import { graphql } from '../common/graphql';
+import { graphql } from '../../common/graphql';
 import { Collections, Post } from './types';
 
 const PRODUCT_HUNT_URL = 'https://api.producthunt.com/v2/api/graphql';
