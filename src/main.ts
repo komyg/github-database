@@ -1,15 +1,11 @@
 import * as dotenv from 'dotenv';
-import { createProductHuntSchema } from './product-hunt/db/schema';
-
-import { getCollections, getPost } from './product-hunt/api/api';
 dotenv.config();
 
-async function createSchema() {
-  await createProductHuntSchema();
-}
+import { executeAction } from './product-hunt/core';
 
 async function main() {
-  await createSchema();
+  await executeAction('createSchema');
+  await executeAction('populateDatabase');
 }
 
 main();

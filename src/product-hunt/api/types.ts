@@ -27,9 +27,19 @@ export interface Collection {
   featuredAt: string;
   followersCount: number;
   url: string;
-  posts: Data<{ id: string }>;
 }
 
+export interface CollectionWithPosts {
+  collection: {
+    id: string;
+    name: string;
+    posts: Data<Post>;
+  };
+}
+
+export interface Posts {
+  posts: Data<Post>;
+}
 export interface Post {
   id: string;
   name: string;
@@ -41,7 +51,10 @@ export interface Post {
   website: string;
   description: string;
   votesCount: number;
-  topics: Data<{ id: string }>;
+  slug: string;
+  reviewsCount: number;
+  collections: Data<Collection>;
+  topics: Data<Topic>;
 }
 
 export interface Topic {

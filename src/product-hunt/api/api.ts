@@ -1,5 +1,5 @@
 import { graphql } from '../../common/graphql';
-import { Collections, Post } from './types';
+import { Collections, Posts } from './types';
 
 const PRODUCT_HUNT_URL = 'https://api.producthunt.com/v2/api/graphql';
 
@@ -14,7 +14,7 @@ function api<T>(query: string, variables?: object) {
   );
 }
 
-export function getCollections(): Promise<Collections> {
+export function getCollectionsFromApi(): Promise<Collections> {
   const query = `
   query Collections {
     collections(order: FOLLOWERS_COUNT) {
@@ -35,21 +35,6 @@ export function getCollections(): Promise<Collections> {
           featuredAt
           followersCount
           url
-          posts {
-            totalCount
-            pageInfo {
-              hasNextPage
-              startCursor
-              endCursor
-              hasPreviousPage
-            }
-            edges {
-              cursor
-              node {
-                id
-              }
-            }
-          }
         }
       }
     }
@@ -60,31 +45,76 @@ export function getCollections(): Promise<Collections> {
   return api(query);
 }
 
-export function getPost(id: string): Promise<Post> {
+export function getPostsFromPh(): Promise<Posts> {
   const query = `
-  query Post($id: ID) {
-    post(id: $id) {
-      id
-      name
-      commentsCount
-      featuredAt
-      createdAt
-      tagline
-      url
-      website
-      description
-      votesCount
-      topics {
-        totalCount
-        edges {
-          node {
-            id
+  query Posts {
+    posts(order: VOTES) {
+      totalCount
+      pageInfo {
+        hasNextPage
+        startCursor
+        endCursor
+        hasPreviousPage
+      }
+      edges {
+        cursor
+        node {
+          id
+          name
+          commentsCount
+          featuredAt
+          createdAt
+          tagline
+          url
+          website
+          description
+          votesCount
+          slug
+          reviewsCount
+          collections(first: 1) {
+            totalCount
+            pageInfo {
+              hasNextPage
+              startCursor
+              endCursor
+              hasPreviousPage
+            }
+            edges {
+              node {
+                id
+                name
+                createdAt
+                description
+                featuredAt
+                followersCount
+                url
+              }
+            }
+          }
+          topics(first: 1) {
+            totalCount
+            pageInfo {
+              hasNextPage
+              startCursor
+              endCursor
+              hasPreviousPage
+            }
+            edges {
+              node {
+                id
+                name
+                createdAt
+                description
+                followersCount
+                postsCount
+              }
+            }
           }
         }
       }
     }
   }
-  `;
 
-  return api(query, { id });
+  `;
+  return api(query);
 }

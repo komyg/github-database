@@ -22,21 +22,21 @@ async function clean(knex: Knex) {
 async function createCollectionsTable(knex: Knex) {
   await knex.schema.createTable('collections', (table) => {
     table.integer('id').notNullable().primary();
-    table.string('name').notNullable();
+    table.text('name').notNullable();
     table.dateTime('created_at');
-    table.string('description');
+    table.text('description');
     table.dateTime('featured_at');
     table.integer('followers_count');
-    table.string('url');
+    table.text('url');
   });
 }
 
 async function createTopicsTable(knex: Knex) {
   await knex.schema.createTable('topics', (table) => {
     table.integer('id').notNullable().primary();
-    table.string('name').notNullable();
+    table.text('name').notNullable();
     table.dateTime('created_at');
-    table.string('description');
+    table.text('description');
     table.integer('followers_count');
     table.integer('posts_count');
   });
@@ -49,14 +49,16 @@ async function createPostsTable(knex: Knex) {
     table.foreign('collection_id').references('collections.id');
     table.integer('topic_id');
     table.foreign('topic_id').references('topics.id');
-    table.string('name').notNullable();
+    table.text('name').notNullable();
     table.integer('comments_count');
     table.dateTime('featured_at');
     table.dateTime('created_at');
-    table.string('tagline');
-    table.string('url');
-    table.string('website');
-    table.string('description');
+    table.text('tagline');
+    table.text('url');
+    table.text('website');
+    table.text('description');
     table.integer('votes_count');
+    table.text('slug');
+    table.integer('reviews_count');
   });
 }
