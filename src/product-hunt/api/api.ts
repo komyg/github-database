@@ -71,6 +71,24 @@ export function getPostsFromPh(): Promise<Posts> {
           votesCount
           slug
           reviewsCount
+          comments(first: 5) {
+            totalCount
+            pageInfo {
+              hasNextPage
+              startCursor
+              endCursor
+              hasPreviousPage
+            }
+            edges {
+              node {
+                id
+                createdAt
+                body
+                isVoted
+                votesCount
+              }
+            }
+          }
           collections(first: 1) {
             totalCount
             pageInfo {

@@ -2,7 +2,7 @@ import { getPostsFromPh } from './api/api';
 import { Posts } from './api/types';
 import { getDbHandler } from './db/data';
 import { createProductHuntSchema } from './db/schema';
-import { DbCollection, DbPost, DbTopic } from './db/types';
+import { DbCollection, DbComments, DbPost, DbTopic } from './db/types';
 
 export type ProductHuntAction = 'createSchema' | 'populateDatabase';
 
@@ -25,6 +25,7 @@ export async function executeAction(action: ProductHuntAction) {
 async function populateDatabase() {
   const phPosts = await getPostsFromPh();
   const dbPosts = extractDbPosts(phPosts);
+  const comments = extractDbComments(phPosts);
 
   const dbCollections = extractDbCollections(phPosts, {
     data: [],
@@ -40,6 +41,7 @@ async function populateDatabase() {
   await db.insertCollections(dbCollections.data);
   await db.insertTopics(dbTopics.data);
   await db.insertPosts(dbPosts);
+  await db.insertComments(comments);
   db.dispose();
 }
 
@@ -60,6 +62,18 @@ function extractDbPosts(phPosts: Posts): DbPost[] {
     slug: edge.node.slug,
     reviews_count: edge.node.reviewsCount,
   }));
+}
+
+function extractDbComments(phPosts: Posts): DbComments[] {
+  return phPosts.posts.edges.flatMap((edge) =>
+    edge.node.comments.edges.map((comment) => ({
+      id: Number(comment.node.id),
+      post_id: Number(edge.node.id),
+      body: comment.node.body,
+      created_at: new Date(comment.node.createdAt),
+      votes_count: comment.node.votesCount,
+    }))
+  );
 }
 
 function extractDbCollections(

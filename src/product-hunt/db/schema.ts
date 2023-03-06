@@ -9,11 +9,13 @@ export async function createProductHuntSchema() {
   await createCollectionsTable(knex);
   await createTopicsTable(knex);
   await createPostsTable(knex);
+  await createCommentsTable(knex);
 
   await knex.destroy();
 }
 
 async function clean(knex: Knex) {
+  await knex.schema.dropTableIfExists('comments');
   await knex.schema.dropTableIfExists('posts');
   await knex.schema.dropTableIfExists('topics');
   await knex.schema.dropTableIfExists('collections');
@@ -60,5 +62,16 @@ async function createPostsTable(knex: Knex) {
     table.integer('votes_count');
     table.text('slug');
     table.integer('reviews_count');
+  });
+}
+
+async function createCommentsTable(knex: Knex) {
+  await knex.schema.createTable('comments', (table) => {
+    table.integer('id').notNullable().primary();
+    table.integer('post_id').notNullable();
+    table.foreign('post_id').references('posts.id');
+    table.text('body');
+    table.dateTime('created_at');
+    table.integer('votes_count');
   });
 }

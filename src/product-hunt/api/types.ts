@@ -55,6 +55,7 @@ export interface Post {
   reviewsCount: number;
   collections: Data<Collection>;
   topics: Data<Topic>;
+  comments: Data<Comments>;
 }
 
 export interface Topic {
@@ -64,4 +65,11 @@ export interface Topic {
   description: string;
   followersCount: number;
   postsCount: number;
+}
+
+export interface Comments {
+  id: number;
+  body: string;
+  createdAt: Date;
+  votesCount: number;
 }

@@ -33,3 +33,11 @@ export interface DbTopic {
   followers_count: number;
   posts_count: number;
 }
+
+export interface DbComments {
+  id: number;
+  post_id: number;
+  body: string;
+  created_at: Date;
+  votes_count: number;
+}
