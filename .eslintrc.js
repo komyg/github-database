@@ -8,5 +8,7 @@ module.exports = {
     'plugin:@typescript-eslint/recommended',
     'prettier',
   ],
-  rules: {},
+  rules: {
+    '@typescript-eslint/no-empty-interface': 'off',
+  },
 };
