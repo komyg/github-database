@@ -1,15 +1,15 @@
 import * as dotenv from 'dotenv';
+import { createProductHuntSchema } from './db/schema';
 
 import { getCollections, getPost } from './product-hunt/api';
 dotenv.config();
 
-async function main() {
-  const result = await getCollections();
-  console.log(result);
+async function createSchema() {
+  await createProductHuntSchema();
+}
 
-  const postID = result.collections.edges[0].node.posts.edges[0].node.id;
-  const post = await getPost(postID);
-  console.log(post);
+async function main() {
+  await createSchema();
 }
 
 main();
