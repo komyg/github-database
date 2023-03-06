@@ -1,7 +1,7 @@
 export interface DbCollection {
   id: number;
   name: string;
-  create_at: Date;
+  created_at: Date;
   description: string;
   featured_at: Date;
   followers_count: number;
@@ -10,6 +10,8 @@ export interface DbCollection {
 
 export interface DbPost {
   id: number;
+  collection_id: number;
+  topic_id: number;
   name: string;
   comments_count: number;
   featured_at: Date;
@@ -21,4 +23,13 @@ export interface DbPost {
   votes_count: number;
   slug: string;
   reviews_count: number;
+}
+
+export interface DbTopic {
+  id: number;
+  name: string;
+  created_at: Date;
+  description: string;
+  followers_count: number;
+  posts_count: number;
 }
