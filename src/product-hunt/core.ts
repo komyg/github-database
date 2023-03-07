@@ -23,8 +23,10 @@ export async function executeAction(action: ProductHuntAction) {
 }
 
 async function populateDatabase() {
-  const phPosts = await getPostsFromPh(2);
-  console.log(phPosts.posts.totalCount);
+  console.log('Retrieving data from Product Hunt API');
+  const phPosts = await getPostsFromPh(10);
+  console.log('Total posts retrieved', phPosts.posts.totalCount);
+
   const dbPosts = extractDbPosts(phPosts);
   const comments = extractDbComments(phPosts);
 

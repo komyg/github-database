@@ -135,12 +135,15 @@ export async function getPostsFromPh(max: number, count = 0): Promise<Posts> {
   `;
 
   if (count >= max) {
+    console.log('Data fetch number:', count);
     const res = await api<Posts>(query, { cursor: '' });
     return res;
   }
 
   const previousPage = await getPostsFromPh(max, count + 1);
-  console.log('Previous page', previousPage);
+  console.log('Data fetch number:', count);
+
+  // Avoid trottling
   await new Promise((resolve) => setTimeout(resolve, 2000));
 
   const nextPage = await api<Posts>(query, {
@@ -148,5 +151,7 @@ export async function getPostsFromPh(max: number, count = 0): Promise<Posts> {
   });
 
   nextPage.posts.edges = nextPage.posts.edges.concat(previousPage.posts.edges);
+  nextPage.posts.totalCount =
+    previousPage.posts.totalCount + nextPage.posts.totalCount;
   return nextPage;
 }
