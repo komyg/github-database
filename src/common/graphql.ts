@@ -19,6 +19,11 @@ export function graphql<T>(
       throw new Error(response.statusText);
     }
 
-    return response.json().then((json) => json.data);
+    return response.json().then((json) => {
+      if (json.errors) {
+        throw new Error(JSON.stringify(json.errors));
+      }
+      return json.data;
+    });
   });
 }

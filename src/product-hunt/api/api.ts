@@ -45,10 +45,10 @@ export function getCollectionsFromApi(): Promise<Collections> {
   return api(query);
 }
 
-export function getPostsFromPh(): Promise<Posts> {
+export async function getPostsFromPh(max: number, count = 0): Promise<Posts> {
   const query = `
-  query Posts {
-    posts(order: VOTES) {
+  query Posts($cursor: String) {
+    posts(order: VOTES, after: $cursor) {
       totalCount
       pageInfo {
         hasNextPage
@@ -132,7 +132,21 @@ export function getPostsFromPh(): Promise<Posts> {
       }
     }
   }
-
   `;
-  return api(query);
+
+  if (count >= max) {
+    const res = await api<Posts>(query, { cursor: '' });
+    return res;
+  }
+
+  const previousPage = await getPostsFromPh(max, count + 1);
+  console.log('Previous page', previousPage);
+  await new Promise((resolve) => setTimeout(resolve, 2000));
+
+  const nextPage = await api<Posts>(query, {
+    cursor: previousPage.posts.pageInfo.endCursor,
+  });
+
+  nextPage.posts.edges = nextPage.posts.edges.concat(previousPage.posts.edges);
+  return nextPage;
 }
