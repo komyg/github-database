@@ -1,6 +1,6 @@
 # Product Hunt Database
 
-Retrives data from the Product Hunt API and stores it in a Postgres Database.
+Retrives data from the [Product Hunt API](https://api.producthunt.com/v2/docs) and stores it in a Postgres Database.
 
 ## Installation
 
